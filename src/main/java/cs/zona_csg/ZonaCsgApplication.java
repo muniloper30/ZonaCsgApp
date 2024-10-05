@@ -81,6 +81,42 @@ public class ZonaCsgApplication implements CommandLineRunner {
 					logger.info("Cliente no encotrado: " + cliente + nl);
 				}
 			}
+			case 3 -> {
+				logger.info("--- Agregar Estudiante ---" +nl);
+				logger.info("Nombre: ");
+				var nombre = sc.nextLine();
+				logger.info("Apellido: ");
+				var apellido = sc.nextLine();
+				logger.info("Membresia: ");
+				var membresia = Integer.parseInt(sc.nextLine());
+				var cliente = new Cliente();
+				cliente.setNombre(nombre);
+				cliente.setApellido(apellido);
+				cliente.setMembresia(membresia);
+				clienteServicio.guardarCliente(cliente);
+				logger.info("Cliente agregado: " + cliente + nl);
+			}
+			case 4 -> {
+				logger.info("--- MODIFICAR CLIENTE ---" + nl);
+				logger.info("Introduce id de cliente a modificar: " );
+				var idCliente = Integer.parseInt(sc.nextLine());
+				Cliente cliente = clienteServicio.buscarClientePorId(idCliente);
+				if (cliente != null){
+					logger.info("Nombre: ");
+					var nombre = sc.nextLine();
+					logger.info("Apellido: ");
+					var apellido = sc.nextLine();
+					logger.info("Membresia: ");
+					var membresia = Integer.parseInt(sc.nextLine());
+					cliente.setNombre(nombre);
+					cliente.setApellido(apellido);
+					cliente.setMembresia(membresia);
+					clienteServicio.guardarCliente(cliente);
+					logger.info("Cliente modificado: " + cliente + nl);
+				}else {
+					logger.info("Cliente no encontrado: " +cliente + nl);
+				}
+			}
 			case 6 -> {
 				logger.info("--- SALIENDO DEL SISTEMA CSG STUDIO ---");
 				salir = true;
