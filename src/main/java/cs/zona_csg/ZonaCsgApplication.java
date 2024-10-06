@@ -9,6 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import javax.security.auth.login.LoginContext;
 import java.util.List;
 import java.util.Scanner;
 
@@ -82,7 +83,7 @@ public class ZonaCsgApplication implements CommandLineRunner {
 				}
 			}
 			case 3 -> {
-				logger.info("--- Agregar Estudiante ---" +nl);
+				logger.info("--- AGREGAR NUEVO CLIENTE ---" +nl);
 				logger.info("Nombre: ");
 				var nombre = sc.nextLine();
 				logger.info("Apellido: ");
@@ -117,10 +118,23 @@ public class ZonaCsgApplication implements CommandLineRunner {
 					logger.info("Cliente no encontrado: " +cliente + nl);
 				}
 			}
+			case 5 -> {
+				logger.info("--- ELIMINAR CLIENTE ---" + nl);
+				logger.info("Introduce id de cliente a eliminar: ");
+				var idCliente = Integer.parseInt(sc.nextLine());
+				Cliente cliente = clienteServicio.buscarClientePorId(idCliente);
+				if (cliente != null){
+					logger.info("Cliente elinimado correctamente: " +cliente + nl);
+					clienteServicio.eliminarCliente(cliente);
+				}else {
+					logger.info("ID no encontrado, cliente no eliminado: " +cliente + nl);
+				}
+			}
 			case 6 -> {
-				logger.info("--- SALIENDO DEL SISTEMA CSG STUDIO ---");
+				logger.info("--- SALIENDO DEL SISTEMA CSG STUDIO ---" +nl + nl);
 				salir = true;
 			}
+			default -> logger.info("Opción no válida: " + opcion);
 		}
 		return salir;
 	}
