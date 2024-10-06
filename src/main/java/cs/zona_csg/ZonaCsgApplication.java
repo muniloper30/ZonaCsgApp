@@ -112,8 +112,17 @@ public class ZonaCsgApplication implements CommandLineRunner {
 					cliente.setNombre(nombre);
 					cliente.setApellido(apellido);
 					cliente.setMembresia(membresia);
-					clienteServicio.guardarCliente(cliente);
-					logger.info("Cliente modificado: " + cliente + nl);
+					//Validación para modificar al cliente
+					logger.info("¿Está seguro de que desea modificar al siguiente cliente?  " + cliente + nl);
+					logger.info("Escriba 'S' para confirmar o cualquier otro caracter para cancelar: ");
+					String confirmacion = sc.nextLine().trim();
+					//Validamos la respuesta del usuario
+					if ("s".equalsIgnoreCase(confirmacion)){
+						clienteServicio.guardarCliente(cliente);
+						logger.info("Cliente modificado: " + cliente + nl);
+					}else {
+						logger.info("Operación cancelada, cliente no modificado " +nl);
+					}
 				}else {
 					logger.info("Cliente no encontrado: " +cliente + nl);
 				}
@@ -124,8 +133,18 @@ public class ZonaCsgApplication implements CommandLineRunner {
 				var idCliente = Integer.parseInt(sc.nextLine());
 				Cliente cliente = clienteServicio.buscarClientePorId(idCliente);
 				if (cliente != null){
-					logger.info("Cliente elinimado correctamente: " +cliente + nl);
-					clienteServicio.eliminarCliente(cliente);
+					//Mostramos detalles del cliente y verificamos si de verdad deseamos borrar a ese cliente
+					logger.info("¿Está seguro de que desea eliminar al siguiente cliente?  " + cliente + nl);
+					logger.info("Escriba 'S' para confirmar o cualquier otro caracter para cancelar: ");
+					String confirmacion = sc.nextLine().trim();
+
+					//Validamos respuesta del usuario
+					if ("s".equalsIgnoreCase(confirmacion)){ //ignorando mayusculas o minúsculas
+						logger.info("Cliente elinimado correctamente: " +cliente + nl);
+						clienteServicio.eliminarCliente(cliente);
+					}else {
+						logger.info("Operación cancelada, El cliente no fué eliminado. " + nl);
+					}
 				}else {
 					logger.info("ID no encontrado, cliente no eliminado: " +cliente + nl);
 				}
