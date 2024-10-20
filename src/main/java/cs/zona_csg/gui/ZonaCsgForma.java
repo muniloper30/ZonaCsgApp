@@ -10,6 +10,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 @Component
@@ -24,12 +26,20 @@ public class ZonaCsgForma extends JFrame{
     private JButton limpiarButton;
     IClienteServicio clienteServicio;
     private DefaultTableModel tablaModeloClientes;
+    private Integer idCliente;
 
     @Autowired  //Inyección de dependencia
     public ZonaCsgForma(ClienteServicio clienteServicio){
         this.clienteServicio = clienteServicio;
         iniciarForma();
         guardarButton.addActionListener(e -> guardarCliente());
+        clientesTabla.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                cargarClienteSeleccionado();
+            }
+        });
     }
 
 
@@ -72,6 +82,7 @@ public class ZonaCsgForma extends JFrame{
 
 //////////////////////////////////////////////////////////////////////
 
+//Método que añade un nuevo cliente
     private void guardarCliente(){
         if(nombreTexto.getText().equals("")){ //Si no introduce nombre ya que es igual a cadena vacia
             mostrarMensaje("Proporciona un nombre");
@@ -97,10 +108,33 @@ public class ZonaCsgForma extends JFrame{
         listarClientes();
     }
 
+
+    //////////////////////////////////////////////////////////////////////
+
+//Hace que se selccione un cliente para poder modificarlo si se desea en el menú de datos de usuario a la izquierda
+    private void cargarClienteSeleccionado(){
+        var renglon = clientesTabla.getSelectedRow(); //Con este método nos va seleccionar el registro que se halla seleccionado
+        if (renglon != -1){ //-1 significa que no se ha seleccionado ningun registro
+            var id = clientesTabla.getModel().getValueAt(renglon, 0).toString();
+            this.idCliente = Integer.parseInt(id);
+            var nombre = clientesTabla.getModel().getValueAt(renglon, 1).toString();
+            this.nombreTexto.setText(nombre);
+            var apellido = clientesTabla.getModel().getValueAt(renglon, 2).toString();
+            this.apellidoTexto.setText(apellido);
+            var membresia = clientesTabla.getModel().getValueAt(renglon, 3).toString();
+            this.membresiaTexto.setText(membresia);
+        }
+    }
+
+
+    //////////////////////////////////////////////////////////////////////
+
 private void mostrarMensaje(String mensaje){
         JOptionPane.showMessageDialog(this, mensaje);
 }
+//////////////////////////////////////////////////////////////////////
 
+//Método para limpiarFormulario antes de volver a rellenar
 private void limpiarFormulario(){
         nombreTexto.setText("");
         apellidoTexto.setText("");
