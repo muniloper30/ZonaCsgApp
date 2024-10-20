@@ -13,7 +13,7 @@ import javax.security.auth.login.LoginContext;
 import java.util.List;
 import java.util.Scanner;
 
-@SpringBootApplication
+//@SpringBootApplication //No se levanta la app por esta clase al comentarla la desactivamos
 public class ZonaCsgApplication implements CommandLineRunner {
 
 	@Autowired
