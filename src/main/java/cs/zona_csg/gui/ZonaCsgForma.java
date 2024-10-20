@@ -98,12 +98,12 @@ public class ZonaCsgForma extends JFrame{
         var nombre = nombreTexto.getText();
         var apellido = apellidoTexto.getText();
         var membresia = Integer.parseInt(membresiaTexto.getText());
-        var cliente = new Cliente(); //ob
-        //El id es un incremento automatico siendo una inserción por lo que lo dejamos como nulo
-        cliente.setNombre(nombre);
-        cliente.setApellido(apellido);
-        cliente.setMembresia(membresia);
-        this.clienteServicio.guardarCliente(cliente); //De esta manera se inserta el nuevo cliente en la base de datos
+        var cliente = new Cliente(this.idCliente, nombre, apellido, membresia);
+        this.clienteServicio.guardarCliente(cliente); //INSERTAR O MODIFICAR (Dependiendo de si el id proporcionado)
+        if (this.idCliente == null){
+            mostrarMensaje("Se agregó un nuevo usuario");
+        }else
+            mostrarMensaje("Se actualizó el cliente seleccionado");
         limpiarFormulario();//Una vez que se limpia el formulario hay que recargar la lista de usuarios
         listarClientes();
     }
@@ -139,6 +139,11 @@ private void limpiarFormulario(){
         nombreTexto.setText("");
         apellidoTexto.setText("");
         membresiaTexto.setText("");
+        //Limpiamos el id del cliente selecionado
+        this.idCliente = null;
+
+        //Deseleccionamos el registro seleccionado de la tabla
+        this.clientesTabla.getSelectionModel().clearSelection();
 }
 
 
