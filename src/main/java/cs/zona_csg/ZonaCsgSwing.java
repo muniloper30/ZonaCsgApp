@@ -1,5 +1,6 @@
 package cs.zona_csg;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
 import cs.zona_csg.gui.ZonaCsgForma;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,6 +15,8 @@ import javax.swing.*;
 
 public class ZonaCsgSwing {
     public static void main(String[] args) {
+        //Configuramos el modo oscuro
+        FlatDarculaLaf.setup();
         // Instanciamos la fábrica de Spring
         ConfigurableApplicationContext contextoSpring =
                 new SpringApplicationBuilder(ZonaCsgSwing.class)//Aplicación de escritorio y no web
