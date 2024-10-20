@@ -40,6 +40,8 @@ public class ZonaCsgForma extends JFrame{
                 cargarClienteSeleccionado();
             }
         });
+        eliminarButton.addActionListener(e -> eliminarCliente());
+        limpiarButton.addActionListener(e -> limpiarFormulario());
     }
 
 
@@ -55,7 +57,14 @@ public class ZonaCsgForma extends JFrame{
 //Creación de un modelo de tabla con 4 columnas
     private void createUIComponents() {
         // TODO: place custom component creation code here
-        this.tablaModeloClientes = new DefaultTableModel(0, 4);
+        //this.tablaModeloClientes = new DefaultTableModel(0, 4);
+        this.tablaModeloClientes = new DefaultTableModel(0,4){
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
+
         String[] cabeceros = {"Id", "Nombre", "Apellido", "Membresia"};
         this.tablaModeloClientes.setColumnIdentifiers(cabeceros);
         this.clientesTabla = new JTable(tablaModeloClientes);
@@ -99,15 +108,41 @@ public class ZonaCsgForma extends JFrame{
         var apellido = apellidoTexto.getText();
         var membresia = Integer.parseInt(membresiaTexto.getText());
         var cliente = new Cliente(this.idCliente, nombre, apellido, membresia);
-        this.clienteServicio.guardarCliente(cliente); //INSERTAR O MODIFICAR (Dependiendo de si el id proporcionado)
+
         if (this.idCliente == null){
+            this.clienteServicio.guardarCliente(cliente); //INSERTAR O MODIFICAR (Dependiendo de si el id proporcionado)
             mostrarMensaje("Se agregó un nuevo usuario");
-        }else
-            mostrarMensaje("Se actualizó el cliente seleccionado");
+        }else if (this.idCliente != null){
+            String confirmacion = JOptionPane.showInputDialog("¿Está seguro de modificar el cliente selccionado?" + "\n" + "Presione S para confirmar");
+            if ("s".equalsIgnoreCase(confirmacion)) {
+                this.clienteServicio.guardarCliente(cliente); //INSERTAR O MODIFICAR (Dependiendo de si el id proporcionado)
+                mostrarMensaje("Se actualizó el cliente seleccionado");
+            }else {
+                mostrarMensaje("Se ha cancelado la operación");
+            }
+        }
         limpiarFormulario();//Una vez que se limpia el formulario hay que recargar la lista de usuarios
         listarClientes();
     }
-
+/////////////////////////////////////////////////////////////////////
+    private void eliminarCliente(){
+        var renglon = clientesTabla.getSelectedRow();
+        if (renglon != -1){
+            var idClienteStr = clientesTabla.getModel().getValueAt(renglon, 0).toString();
+            this.idCliente = Integer.parseInt(idClienteStr);
+            var cliente = new Cliente();
+            cliente.setId(this.idCliente);
+            String confirmacion = JOptionPane.showInputDialog("¿Está seguro de eliminar al cliente seleccionado?" + "\n" + "Presione S para confirmar");
+            if ("s".equalsIgnoreCase(confirmacion)){
+                clienteServicio.eliminarCliente(cliente);
+                mostrarMensaje("Cliente con id " + this.idCliente + " ha sido eliminado correctamente");
+            }else
+                mostrarMensaje("Se ha cancelado la operación");
+            listarClientes();
+        }
+        else
+            mostrarMensaje("Debe seleccionar un Cliente para poder eliminarlo");
+    }
 
     //////////////////////////////////////////////////////////////////////
 
